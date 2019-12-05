@@ -2,7 +2,7 @@ package com.mybatis.boot.util;
 
 import com.mybatis.boot.model.User;
 import lombok.Data;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
@@ -24,7 +24,7 @@ import static java.util.regex.Pattern.compile;
  * @Date 2019/12/4 14:26
  * @Description TODO
  */
-@Log
+@Slf4j
 @Data
 public class MybatisRedisCache implements Cache {
 
@@ -57,7 +57,7 @@ public class MybatisRedisCache implements Cache {
                 redisTemplate.opsForValue().set(key, value, 2, TimeUnit.DAYS);
             } catch (Exception e) {
                 e.printStackTrace();
-                log.warning("发生未知异常");
+                log.error("发生未知异常");
             }
         }
     }
@@ -75,7 +75,7 @@ public class MybatisRedisCache implements Cache {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                log.warning("发生未知异常");
+                log.error("发生未知异常");
             }
 
         }
@@ -94,7 +94,7 @@ public class MybatisRedisCache implements Cache {
 
     @Override
     public void clear() {
-        log.warning("《=================清空缓存============》");
+        log.warn("《=================清空缓存============》");
         try {
             Set<String> keys = redisTemplate.keys("*:" + this.id + "*");
             if (!CollectionUtils.isEmpty(keys)) {
@@ -102,7 +102,7 @@ public class MybatisRedisCache implements Cache {
                 log.info("《=================删除\t" + number + "\t条记录============》");
             }
         } catch (Exception e) {
-            log.warning("Redis发生未知异常");
+            log.error("Redis发生未知异常");
         }
     }
 
