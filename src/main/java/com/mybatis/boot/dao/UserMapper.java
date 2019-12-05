@@ -2,11 +2,9 @@ package com.mybatis.boot.dao;
 
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.cache.annotation.Cacheable;
 
 public interface UserMapper {
     long countByExample(UserExample example);

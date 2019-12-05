@@ -6,7 +6,6 @@ import com.mybatis.boot.dao.UserMapper;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
 import com.mybatis.boot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +19,15 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserMapper userMapper) {
+    public UserServiceImpl(RedisTemplate redisTemplate, UserMapper userMapper) {
+        this.redisTemplate = redisTemplate;
         this.userMapper = userMapper;
     }
+
 
     @Override
     public List<User> getUserAll() {
@@ -52,5 +52,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(int id) {
         return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int del(Integer id) {
+        return userMapper.deleteByPrimaryKey(id);
     }
 }

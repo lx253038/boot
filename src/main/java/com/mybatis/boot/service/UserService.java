@@ -1,7 +1,6 @@
 package com.mybatis.boot.service;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.mybatis.boot.model.User;
 
 import java.util.List;
@@ -20,4 +19,6 @@ public interface UserService {
     Page<User> findAllUser(int pageNum, int pageSize);
 
     User getById(int id);
+
+    int del(Integer id);
 }
