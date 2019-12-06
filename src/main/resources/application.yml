@@ -27,6 +27,13 @@ mybatis:
   type-aliases-package: com.mybatis.boot.model
   configuration:
     cache-enabled: true
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mybatis.boot.model
+  configuration:
+    cache-enabled: true
+
 logging:
   level:
     com.mybatis.boot.dao.*: debug

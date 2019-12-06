@@ -1,12 +1,13 @@
 package com.mybatis.boot.service;
 
+import com.mybatis.boot.dao.UserMapper;
+import com.mybatis.boot.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -23,6 +24,9 @@ class UserServiceTest {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    UserMapper userMapper;
+
     @Test
     public void test1() {
 
@@ -31,6 +35,15 @@ class UserServiceTest {
             boolean number = redisTemplate.delete(keys.toArray()[0]);
             System.out.println(number);
         }
+    }
+
+    @Test
+    public void test2() {
+
+        System.out.println(userMapper.selectByPrimaryKey(66));
+        System.out.println(userMapper.selectById(66));
+        userMapper.insert(new User("546456", 34));
+
     }
 
 }

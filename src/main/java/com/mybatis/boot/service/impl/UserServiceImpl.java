@@ -1,7 +1,7 @@
 package com.mybatis.boot.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mybatis.boot.dao.UserMapper;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
@@ -42,11 +42,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllUser(int pageNum, int pageSize) {
+    public PageInfo<User> findAllUser(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<User> list = userMapper.selectByExample(new UserExample());
-
-        return (Page<User>) list;
+        List<User> list = userMapper.selectByExample(null);
+        return new PageInfo<>(list, 4);
     }
 
     @Override

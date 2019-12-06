@@ -1,5 +1,8 @@
 package com.mybatis.boot.model;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +12,10 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("users")
 public class User implements Serializable {
     private static final long serialVersionUID = 1366286602560674740L;
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private String name;
