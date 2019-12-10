@@ -1,7 +1,7 @@
 package com.mybatis.boot.dao;
 
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
 import com.mybatis.boot.util.MybatisRedisCache;
@@ -18,8 +18,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     int deleteByPrimaryKey(Integer id);
 
-    @Override
-    Integer insert(User record);
+    /*@Override
+    int insert(User record);*/
 
     int insertSelective(User record);
 

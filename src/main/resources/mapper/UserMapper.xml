@@ -105,12 +105,13 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.mybatis.boot.model.User">
+    <!--mybatis-plus中已存在该方法-->
+  <!--  <insert id="insert" parameterType="com.mybatis.boot.model.User">
     insert into users (id, name, age
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}
       )
-  </insert>
+  </insert>-->
     <insert id="insertSelective" parameterType="com.mybatis.boot.model.User">
         insert into users
         <trim prefix="(" suffix=")" suffixOverrides=",">

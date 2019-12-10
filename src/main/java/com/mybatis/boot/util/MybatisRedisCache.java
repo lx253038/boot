@@ -50,7 +50,6 @@ public class MybatisRedisCache implements Cache {
     @Override
     public void putObject(Object key, Object value) {
         if (value != null) {
-            List<User> users = (List<User>) value;
             key = formatKey(key.toString());
             log.info("Redis»º´æÌí¼ÓÊý¾Ý£ºkey=" + key);
             try {
