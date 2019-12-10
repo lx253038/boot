@@ -1,5 +1,6 @@
 package com.mybatis.boot.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import com.mybatis.boot.model.User;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @Date 2019/12/3 14:26
  * @Description TODO
  */
-public interface UserService {
+public interface UserService extends IService<User> {
 
     List<User> getUserAll();
 

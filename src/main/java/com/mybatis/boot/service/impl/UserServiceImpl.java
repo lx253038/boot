@@ -1,8 +1,9 @@
 package com.mybatis.boot.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mybatis.boot.dao.UserMapper;
+import com.mybatis.boot.mapper.UserMapper;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
 import com.mybatis.boot.service.UserService;
@@ -17,7 +18,7 @@ import java.util.List;
  * @Description TODO
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
 
     private final RedisTemplate redisTemplate;
 

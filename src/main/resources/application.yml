@@ -22,21 +22,21 @@ spring:
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.mybatis.boot.model
-  configuration:
-    cache-enabled: true
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.mybatis.boot.model
+#  configuration:
+#    cache-enabled: true
 
 mybatis-plus:
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.mybatis.boot.model
   configuration:
     cache-enabled: true
 
 logging:
   level:
-    com.mybatis.boot.dao.*: debug
+    com.mybatis.boot.mapper.*: debug
 
 #pagehelper分页插件
 pagehelper:

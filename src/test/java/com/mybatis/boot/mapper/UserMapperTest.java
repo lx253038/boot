@@ -1,4 +1,4 @@
-package com.mybatis.boot.dao;
+package com.mybatis.boot.mapper;
 
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.model.UserExample;
@@ -10,8 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Random;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Author LX

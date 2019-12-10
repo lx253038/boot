@@ -1,6 +1,6 @@
 package com.mybatis.boot.service;
 
-import com.mybatis.boot.dao.UserMapper;
+import com.mybatis.boot.mapper.UserMapper;
 import com.mybatis.boot.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,10 @@ class UserServiceTest {
         System.out.println(userMapper.selectById(66));
         userMapper.insert(new User("546456", 34));
 
+    }
+    @Test
+    void test3(){
+        System.out.println(userService.list());
     }
 
 }

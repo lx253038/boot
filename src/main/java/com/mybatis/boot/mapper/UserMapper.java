@@ -1,4 +1,4 @@
-package com.mybatis.boot.dao;
+package com.mybatis.boot.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
