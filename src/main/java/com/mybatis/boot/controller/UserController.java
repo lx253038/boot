@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -35,8 +36,8 @@ public class UserController {
 
 
     @RequestMapping(value = "/add", produces = {"application/json;charset=UTF-8"})
-    public boolean addUser(User user) {
-        return userService.saveOrUpdate(user);
+    public int addUser(User user) {
+        return userService.addUser(user);
     }
 
 
@@ -72,8 +73,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/del/{id}")
-    public boolean deleteById(@PathVariable(value = "id") Integer id) {
-        return userService.removeById(id);
+    public int deleteById(@PathVariable(value = "id") Integer id) {
+        return userService.del(id);
+    }
+
+    @GetMapping("/getAll")
+    public List<User> getUserAll(){
+        return userService.getUserAll();
     }
 }
 
