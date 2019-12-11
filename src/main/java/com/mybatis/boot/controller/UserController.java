@@ -43,10 +43,23 @@ public class UserController {
     @GetMapping(value = "/all/{pageNum}/{pageSize}", produces = {"application/json;charset=UTF-8"})
     public Object findAllUser(@PathVariable(value = "pageNum") int pageNum, @PathVariable("pageSize") int pageSize) {
         System.out.println(pool);
+/*        pool.submit(() -> {
+            int sum = 0;
+            for (int i = 0; i <= 100; i++) {
+                sum += i;
+                try {
+                    TimeUnit.MILLISECONDS.sleep(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println(Thread.currentThread().getName()+":sum="+sum);
+            return sum;
+        });*/
         PageHelper.startPage(pageNum, pageSize);
         /*PageInfo pageInfo = userService.findAllUser(pageNum, pageSize);*/
         PageInfo pageInfo = new PageInfo(userService.list(), 4);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 110; i++) {
             asyncService.executeAsync();
         }
         return pageInfo;

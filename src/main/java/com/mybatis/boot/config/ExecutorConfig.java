@@ -4,9 +4,9 @@ import com.mybatis.boot.asyn.util.VisiableThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class ExecutorConfig {
     @Bean
-    public Executor asyncServiceExecutor() {
+    public AsyncTaskExecutor asyncServiceExecutor() {
         log.info("====================start asyncServiceExecutor==================");
         ThreadPoolTaskExecutor executor = new VisiableThreadPoolTaskExecutor();
         //配置核心线程数
