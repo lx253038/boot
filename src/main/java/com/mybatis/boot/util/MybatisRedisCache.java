@@ -93,7 +93,7 @@ public class MybatisRedisCache implements Cache {
 
     @Override
     public void clear() {
-        log.warn("¡¶=================Çå¿Õ»º´æ============¡·");
+        log.debug("¡¶=================Çå¿Õ»º´æ============¡·");
         try {
             Set<String> keys = redisTemplate.keys("*:" + this.id + "*");
             if (!CollectionUtils.isEmpty(keys)) {
