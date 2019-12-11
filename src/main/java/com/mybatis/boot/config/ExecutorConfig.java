@@ -1,6 +1,6 @@
 package com.mybatis.boot.config;
 
-import com.mybatis.boot.asyn.util.VisiableThreadPoolTaskExecutor;
+import com.mybatis.boot.asyn.util.VisitableThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class ExecutorConfig {
     @Bean
     public AsyncTaskExecutor asyncServiceExecutor() {
         log.info("====================start asyncServiceExecutor==================");
-        ThreadPoolTaskExecutor executor = new VisiableThreadPoolTaskExecutor();
+        ThreadPoolTaskExecutor executor = new VisitableThreadPoolTaskExecutor();
         //配置核心线程数
         executor.setCorePoolSize(2);
         //配置最大线程数

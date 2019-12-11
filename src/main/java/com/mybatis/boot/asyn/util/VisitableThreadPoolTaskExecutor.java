@@ -7,8 +7,6 @@ package com.mybatis.boot.asyn.util;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -22,7 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Description 显示线程池信息
  */
 @Slf4j
-public class VisiableThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
+public class VisitableThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
     private void showThreadPoolInfo(String prefix) {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();

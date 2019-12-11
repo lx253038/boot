@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
 
@@ -18,7 +19,10 @@ public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+
+    @Length(max = 10, message = "长度最多十位")
     private String name;
+
 
     private Integer age;
 

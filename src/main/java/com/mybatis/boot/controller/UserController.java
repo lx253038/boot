@@ -5,11 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.mybatis.boot.asyn.AsyncService;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.service.UserService;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -36,7 +38,10 @@ public class UserController {
 
 
     @RequestMapping(value = "/add", produces = {"application/json;charset=UTF-8"})
-    public int addUser(User user) {
+    public Object addUser(@Valid User user,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return bindingResult.getFieldErrors();
+        }
         return userService.addUser(user);
     }
 
