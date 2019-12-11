@@ -6,6 +6,7 @@ package com.mybatis.boot.asyn.util;
  * @Description TODO
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -20,10 +21,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date 2019/12/10 19:38
  * @Description 显示线程池信息
  */
-
+@Slf4j
 public class VisiableThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
-
-    private static final Logger logger = LoggerFactory.getLogger(VisiableThreadPoolTaskExecutor.class);
 
     private void showThreadPoolInfo(String prefix) {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
@@ -32,7 +31,7 @@ public class VisiableThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
             return;
         }
 
-        logger.info("{}, {}, 任务总数[{}], 已完成数[{}], 活跃线程数[{}], 队列大小[{}]",
+        log.info("{}, {}, 任务总数[{}], 已完成数[{}], 活跃线程数[{}], 队列大小[{}]",
                 this.getThreadNamePrefix(),
                 prefix,
                 threadPoolExecutor.getTaskCount(),
