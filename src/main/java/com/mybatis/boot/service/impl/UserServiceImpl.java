@@ -36,7 +36,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     @Cacheable
     public List<User> getUserAll() {
-        System.out.println(userMapper);
         return userMapper.selectByExample(new UserExample());
     }
 

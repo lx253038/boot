@@ -72,23 +72,20 @@ public class RedisConfig extends CachingConfigurerSupport {
      */
     @Override
     public KeyGenerator keyGenerator() {
-        return new KeyGenerator() {
-            @Override
-            public Object generate(Object o, Method method, Object... objects) {
-                //格式化缓存key字符串
-                StringBuilder sb = new StringBuilder();
-                //追加类名
-                sb.append(o.getClass().getName()).append(".");
-                //追加方法名
-                sb.append(method.getName());
-                //遍历参数并且追加
-                for (Object obj : objects) {
-                    sb.append(".");
-                    sb.append(obj.toString());
-                }
-                System.out.println("调用Redis缓存Key : " + sb.toString());
-                return sb.toString();
+        return (o, method, objects) -> {
+            //格式化缓存key字符串
+            StringBuilder sb = new StringBuilder();
+            //追加类名
+            sb.append(o.getClass().getName()).append(".");
+            //追加方法名
+            sb.append(method.getName());
+            //遍历参数并且追加
+            for (Object obj : objects) {
+                sb.append(".");
+                sb.append(obj.toString());
             }
+           log.info("调用Redis缓存:Key = " + sb.toString());
+            return sb.toString();
         };
     }
 

@@ -14,6 +14,10 @@ public class BootApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
+        //¹Ø±ÕBanner
+//        SpringApplication app=new SpringApplication(BootApplication.class);
+//        app.setBannerMode(Mode.OFF);
+//        app.run(args);
     }
 
 }

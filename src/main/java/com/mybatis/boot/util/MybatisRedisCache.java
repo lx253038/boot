@@ -1,6 +1,5 @@
 package com.mybatis.boot.util;
 
-import com.mybatis.boot.model.User;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;
@@ -9,7 +8,6 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -55,8 +53,10 @@ public class MybatisRedisCache implements Cache {
             try {
                 redisTemplate.opsForValue().set(key, value, 2, TimeUnit.DAYS);
             } catch (Exception e) {
-                e.printStackTrace();
-                log.error("发生未知异常");
+//                e.printStackTrace();
+                log.error("===================================发生异常===================================");
+                log.error(e.getMessage());
+                log.error("==============================================================================");
             }
         }
     }
@@ -73,8 +73,10 @@ public class MybatisRedisCache implements Cache {
                     return o;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                log.error("发生未知异常");
+//                e.printStackTrace();
+                log.error("===================================发生异常===================================");
+                log.error(e.getMessage());
+                log.error("==============================================================================");
             }
 
         }
