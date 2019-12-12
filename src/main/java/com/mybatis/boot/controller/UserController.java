@@ -2,6 +2,7 @@ package com.mybatis.boot.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mybatis.boot.annotation.SysLog;
 import com.mybatis.boot.asyn.AsyncService;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.service.UserService;
@@ -37,6 +38,7 @@ public class UserController {
     }
 
 
+    @SysLog("新增用户")
     @RequestMapping(value = "/add", produces = {"application/json;charset=UTF-8"})
     public Object addUser(@Valid User user,BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
@@ -46,6 +48,7 @@ public class UserController {
     }
 
 
+    @SysLog("分页查询用户信息")
     @GetMapping(value = "/all/{pageNum}/{pageSize}", produces = {"application/json;charset=UTF-8"})
     public Object findAllUser(@PathVariable(value = "pageNum") int pageNum, @PathVariable("pageSize") int pageSize) {
         System.out.println(pool);
@@ -71,12 +74,13 @@ public class UserController {
         return pageInfo;
     }
 
-
+    @SysLog("根据Id获取用户信息")
     @GetMapping(value = "/get/{id}", produces = {"application/json;charset=UTF-8"})
     public User getById(@PathVariable(value = "id") int id) {
         return userService.getById(id);
     }
 
+    @SysLog("根据Id删除用户信息")
     @GetMapping(value = "/del/{id}")
     public int deleteById(@PathVariable(value = "id") Integer id) {
         return userService.del(id);
