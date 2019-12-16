@@ -68,9 +68,9 @@ public class UserController {
         PageHelper.startPage(pageNum, pageSize);
         /*PageInfo pageInfo = userService.findAllUser(pageNum, pageSize);*/
         PageInfo pageInfo = new PageInfo(userService.list(), 4);
-        for (int i = 0; i < 110; i++) {
-            asyncService.executeAsync();
-        }
+//        for (int i = 0; i < 110; i++) {
+//            asyncService.executeAsync();
+//        }
         return pageInfo;
     }
 

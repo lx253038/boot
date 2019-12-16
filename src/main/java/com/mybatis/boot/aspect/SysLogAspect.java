@@ -97,7 +97,12 @@ public class SysLogAspect {
 
 
         HttpServletRequest httpServletRequest = RequestHolder.getHttpServletRequest();
-        systemLog.setIp(IpUtils.getIp(httpServletRequest));
+        if (httpServletRequest != null) {
+            systemLog.setIp(IpUtils.getIp(httpServletRequest));
+        }else{
+            systemLog.setIp("0.0.0.0");
+
+        }
 
         systemLog.setCreateTime(new Date());
 
