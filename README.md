@@ -1,2 +1,6 @@
 # boot
 SpringBoot整合Mybatis并使用Redis自定义实现Mybatis二级缓存以及Redis序列化
+
+使用Spring AOP和自定义注解实现系统操作日志的记录
+
+SpringBoot整合RabbitMQ实现消息队列等相关功能
