@@ -4,13 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-/**
- * å­—ç¬¦ä¸²å·¥å…·ç±», ç»§æ‰¿org.apache.commons.lang3.StringUtilsç±»
- */
 public class IpUtils {
 
     /**
-     * è·å–ipåœ°å€
+     * »ñÈ¡ipµØÖ·
      */
     public static String getIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
@@ -27,7 +24,7 @@ public class IpUtils {
             ip = ip.split(",")[0];
         }
         if ("127.0.0.1".equals(ip)) {
-            // è·å–æœ¬æœºçœŸæ­£çš„ipåœ°å€
+            // »ñÈ¡±¾»úÕæÕıµÄipµØÖ·
             try {
                 ip = InetAddress.getLocalHost().getHostAddress();
             } catch (UnknownHostException e) {
