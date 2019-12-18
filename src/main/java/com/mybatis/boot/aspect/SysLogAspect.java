@@ -42,8 +42,9 @@ public class SysLogAspect {
     private void pointCut() {
     }
 
-    @Around("pointCut()")
-    public Object around(ProceedingJoinPoint joinPoint) {
+    @Around("pointCut()&&@annotation(sysLog)")
+    public Object around(ProceedingJoinPoint joinPoint,SysLog sysLog) {
+        System.out.println(sysLog.value());
         Object result = null;
         long beginTime = System.currentTimeMillis();
         //System.out.println("Ç°ÖÃÍ¨Öª£º" + joinPoint.getSignature().getName() + " \t" + Arrays.asList(joinPoint.getArgs()));
