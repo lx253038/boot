@@ -1,7 +1,14 @@
 server:
   port: 88
+  servlet:
+    context-path: /boot
 
 spring:
+  freemarker:
+    suffix: .ftl
+    content-type: text/html
+    charset: UTF-8
+    cache: false
   jackson:
     time-zone: GMT+8
   datasource:
@@ -34,6 +41,12 @@ spring:
     username: guest
     publisher-returns: true
     publisher-confirm-type: correlated
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
 
 #mybatis:
 #  mapper-locations: classpath:mapper/*.xml
@@ -57,3 +70,14 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+fdfs:
+  tracker-list:
+    - 192.168.171.128:22122
+  connect-timeout: 600
+  so-timeout: 1500
+  thumb-image:
+    width: 150
+    height: 150
+  web-server-url: http://192.168.171.128:88/
+
