@@ -2,6 +2,7 @@ package com.mybatis.boot.util;
 
 import com.github.tobato.fastdfs.domain.conn.FdfsWebServer;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
+import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +113,21 @@ public class FastDfsUtils {
         } catch (FdfsUnsupportStorePathException e) {
             log.warn(e.getMessage());
         }
+    }
+
+    /**
+     * обтьнд╪Ч
+     * @param fileUrl
+     * @return
+     */
+    public byte[] downLoadFile(String fileUrl) {
+        if (StringUtils.isEmpty(fileUrl)) {
+            return null;
+        }
+        DownloadByteArray downloadByteArray = new DownloadByteArray();
+        StorePath storePath = StorePath.parseFromUrl(fileUrl);
+        byte[] bytes = storageClient.downloadFile(storePath.getGroup(), storePath.getPath(), downloadByteArray);
+        return bytes;
     }
 
 }

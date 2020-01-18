@@ -68,7 +68,7 @@
     }
 
     function downLoadFile(url, name) {
-        window.location.href = "${path}/fileService/downloadFile?fileUrl=" + url + "&fileName=" + name;
+        window.location.href = "${path}/fileService/downloadFile?fileUrl=" + url + "&fileName=" +encodeURI(name) ;
     }
 </script>
 </body>
