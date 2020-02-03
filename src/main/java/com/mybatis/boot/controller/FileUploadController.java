@@ -1,5 +1,7 @@
 package com.mybatis.boot.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
@@ -60,7 +62,7 @@ public class FileUploadController {
     @ResponseBody
     public LayuiTableResult listFileJson(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo pageInfo = new PageInfo(fileBeanService.list());
+        PageInfo pageInfo = new PageInfo(fileBeanService.list(new LambdaQueryWrapper<FileBean>().orderByDesc(FileBean::getUploadTime)));
         return new LayuiTableResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
