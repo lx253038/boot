@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class RabbitController {
     @GetMapping("/send/{message}")
     public String sendMessage(@PathVariable String message) {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        rabbitTemplate.convertAndSend(ExchangeAndQueue.DIRECT_EXCHANGE, "directUser", new User(message, new Random().nextInt(100)), correlationId);
+        rabbitTemplate.convertAndSend(ExchangeAndQueue.DIRECT_EXCHANGE, "directUser", new User(12, message, new Random().nextInt(100), new Date()), correlationId);
         return "·¢ËÍ³É¹¦£¡";
     }
 

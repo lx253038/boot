@@ -1,8 +1,12 @@
 package com.mybatis.boot.rabbitmq;
 
+import com.alibaba.fastjson.JSON;
 import com.mybatis.boot.model.User;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @Author LX
@@ -12,10 +16,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitReceiver {
 
-    @RabbitListener(queues = {"queue1"})
-    public void getMsg1(User user) {
-        System.out.println(user);
+
+    @RabbitListener(queues = "queue1")
+    public void getMsg(User user) {
+        System.out.println("队列1消费消息User=:" + user);
     }
+
+    @RabbitListener(queues = {"queue1"})
+    public void getMsg1(Message message) throws UnsupportedEncodingException {
+        String userStr = new String(message.getBody(), "UTF-8");
+        System.out.println("队列1消费消息Json:" + userStr);
+        User user = JSON.parseObject(userStr, User.class);
+        System.out.println(user);
+
+    }
+
 
     @RabbitListener(queues = "queue2")
     public void getMsgStr2(String msg) {

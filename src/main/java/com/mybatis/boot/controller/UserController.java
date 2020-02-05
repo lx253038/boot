@@ -1,5 +1,7 @@
 package com.mybatis.boot.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mybatis.boot.annotation.SysLog;
@@ -66,8 +68,8 @@ public class UserController {
             return sum;
         });*/
         PageHelper.startPage(pageNum, pageSize);
-        /*PageInfo pageInfo = userService.findAllUser(pageNum, pageSize);*/
-        PageInfo pageInfo = new PageInfo(userService.list(), 4);
+        /* PageInfo pageInfo = userService.findAllUser(pageNum, pageSize);*/   //spring»º´æ
+        PageInfo pageInfo = new PageInfo(userService.list(), 4);      //mybatis¶þ¼¶»º´æ
 //        for (int i = 0; i < 110; i++) {
 //            asyncService.executeAsync();
 //        }
