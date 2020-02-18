@@ -1,5 +1,9 @@
-document.write("<script src='../static/layer/layui.js' charset='utf-8'></script>");
-document.write("<script src='../static/js/jquery-3.0.0.min.js' charset='utf-8'></script>");
+
+let pathName = document.location.pathname;
+let index = pathName.substr(1).indexOf("/");
+let contextPath = pathName.substr(0,index+1);
+document.write("<script src='"+contextPath+"/static/layer/layui.js' charset='utf-8'></script>");
+document.write("<script src='"+contextPath+"/static/js/jquery-3.0.0.min.js' charset='utf-8'></script>");
 
 
 setTimeout(function () {

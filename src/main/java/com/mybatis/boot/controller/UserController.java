@@ -89,8 +89,21 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public List<User> getUserAll(){
-        return userService.getUserAll();
+    public PageInfo getUserAll() {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().select("id")
+                .like("name", "万")
+                .or().between("age", 45, 50)
+                .orderBy(true, true, "age", "id");
+        //lambda表达式条件
+        LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<User>().setEntity(new User())
+                .like(User::getName, "万")
+                .or().ge(User::getAge, 50)
+                .le(User::getAge, 70)
+                .orderBy(true, true, User::getAge, User::getId);
+
+        List<User> users = userService.list(lambdaQueryWrapper);
+        PageInfo pageInfo = new PageInfo(users, 4);
+        return pageInfo;
     }
 }
 
