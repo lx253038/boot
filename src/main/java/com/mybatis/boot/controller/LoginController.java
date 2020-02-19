@@ -1,13 +1,20 @@
 package com.mybatis.boot.controller;
 
+import com.mybatis.boot.util.ResultUtil;
+import com.mybatis.boot.vo.LayuiResult;
 import com.wf.captcha.SpecCaptcha;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @Description
  */
 @Controller
+@Validated
 public class LoginController {
 
     @Autowired
@@ -31,20 +39,39 @@ public class LoginController {
 
     @PostMapping("/loginCheck")
     @ResponseBody
-    public String loginCheck(String username, String password, String vercode, String codeKey) {
-        System.out.println(username);
-        System.out.println(password);
+    public LayuiResult loginCheck(HttpServletResponse response, @Length(min = 3, max = 10, message = "用户名长度最少3位，最多10位！") String username, @NotEmpty String password, String vercode, String codeKey) {
+
+
         Object relText = redisTemplate.opsForValue().get(codeKey);
         if (relText == null) {
-            return "验证码已过期！";
+            return ResultUtil.error(500, "验证码已过期");
         }
         if (!vercode.equalsIgnoreCase(String.valueOf(relText))) {
-            return "验证码错误！";
+            return ResultUtil.error(500, "验证码错误");
         }
         redisTemplate.delete(codeKey);
-        return "登录成功！";
+
+        String token = UUID.randomUUID().toString();
+        redisTemplate.opsForValue().set("token::" + token, username, 7, TimeUnit.DAYS);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setMaxAge(3600 * 24 * 7);
+        cookie.setPath("/boot");
+        response.addCookie(cookie);
+        return ResultUtil.success("登录成功！");
 
     }
+
+    @GetMapping("/index")
+    public String index(@RequestParam(value = "token", required = false) String param, @CookieValue(value = "token", required = false) String token, Model model) {
+        String userName = (String) redisTemplate.opsForValue().get("token::" + (StringUtils.isEmpty(param) ? token : param));
+        if (StringUtils.isEmpty(userName)) {
+            return "login";
+        }
+        model.addAttribute("user", userName);
+
+        return "hello";
+    }
+
 
     @PostMapping("/getCode")
     @ResponseBody

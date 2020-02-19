@@ -1,7 +1,6 @@
 package com.mybatis.boot.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
@@ -50,7 +49,7 @@ public class FileUploadController {
     @RequestMapping("/index")
     public String index(Model model) {
         model.addAttribute("name", "lisi");
-        return "index";
+        return "file/index";
     }
 
     @GetMapping("/listFile")
