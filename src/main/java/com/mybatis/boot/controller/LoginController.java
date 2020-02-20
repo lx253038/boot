@@ -1,5 +1,6 @@
 package com.mybatis.boot.controller;
 
+import com.mybatis.boot.model.User;
 import com.mybatis.boot.util.ResultUtil;
 import com.mybatis.boot.vo.LayuiResult;
 import com.wf.captcha.SpecCaptcha;
@@ -8,15 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +44,6 @@ public class LoginController {
     @ResponseBody
     public LayuiResult loginCheck(HttpServletResponse response, @Length(min = 3, max = 10, message = "用户名长度最少3位，最多10位！") String username, @NotEmpty String password, String vercode, String codeKey) {
 
-
         Object relText = redisTemplate.opsForValue().get(codeKey);
         if (relText == null) {
             return ResultUtil.error(500, "验证码已过期");
@@ -50,9 +52,9 @@ public class LoginController {
             return ResultUtil.error(500, "验证码错误");
         }
         redisTemplate.delete(codeKey);
-
+        User user = new User(username, new Random().nextInt(100));
         String token = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set("token::" + token, username, 7, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("token::" + token, user, 30, TimeUnit.MINUTES);
         Cookie cookie = new Cookie("token", token);
         cookie.setMaxAge(3600 * 24 * 7);
         cookie.setPath("/boot");
@@ -61,14 +63,9 @@ public class LoginController {
 
     }
 
-    @GetMapping("/index")
-    public String index(@RequestParam(value = "token", required = false) String param, @CookieValue(value = "token", required = false) String token, Model model) {
-        String userName = (String) redisTemplate.opsForValue().get("token::" + (StringUtils.isEmpty(param) ? token : param));
-        if (StringUtils.isEmpty(userName)) {
-            return "login";
-        }
-        model.addAttribute("user", userName);
-
+    @GetMapping({"/index", "/"})
+    public String index(Model model, User user) {
+        model.addAttribute("user", user.getName());
         return "hello";
     }
 
