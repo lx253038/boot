@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /boot
 
+
 spring:
   freemarker:
     suffix: .ftl
