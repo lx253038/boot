@@ -32,9 +32,11 @@ public class RedisServiceImpl implements RedisService {
         String token = request.getParameter("token");
         if (StringUtils.isEmpty(token)) {
             Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    token = cookie.getValue();
+            if(cookies!=null){
+                for (Cookie cookie : cookies) {
+                    if ("token".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                    }
                 }
             }
         }

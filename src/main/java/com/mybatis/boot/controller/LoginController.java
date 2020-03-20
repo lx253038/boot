@@ -8,13 +8,13 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
@@ -40,6 +40,17 @@ public class LoginController {
         return "login";
     }
 
+
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response, HttpServletRequest request) {
+
+        Cookie cookie = new Cookie("token", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/boot");
+        response.addCookie(cookie);
+        return "redirect:/login";
+    }
+
     @PostMapping("/loginCheck")
     @ResponseBody
     public LayuiResult loginCheck(HttpServletResponse response, @Length(min = 3, max = 10, message = "用户名长度最少3位，最多10位！") String username, @NotEmpty String password, String vercode, String codeKey) {
@@ -63,11 +74,6 @@ public class LoginController {
 
     }
 
-    @GetMapping({"/index", "/"})
-    public String index(Model model, User user) {
-        model.addAttribute("user", user.getName());
-        return "hello";
-    }
 
 
     @PostMapping("/getCode")
