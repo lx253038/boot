@@ -1,11 +1,11 @@
 ## SpringBoot+Mybatis+Redis+RabbitMQ秒杀系统
-####应用到的技术点:
+### 应用到的技术点:
 - springboot整合mybatis/mybatis-plus实现数据的增、删、改、查等基础功能
 - springboot整合redis，配置redisTemplate 使用fastjson实现key、value的序列化以及自定义key的生成规则等功能
 - springboot整合rabbitmq实现消息的发送和接收等基本功能
 - springboot整合fastDfs文件服务器实现了对文件的上传和下载等功能
 - 使用redis实现了mybatis的自定义二级缓存功能
-#####Mybatis知识点
+##### Mybatis知识点
 - springboot启动类添加@MapperScan()注解，扫描Mapper接口
 ```
 @MapperScan("com.mybatis.boot.**.mapper")
