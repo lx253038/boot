@@ -1,18 +1,22 @@
 package com.mybatis.boot.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.pagehelper.PageInfo;
-import com.mybatis.boot.mapper.UserMapper;
-import com.mybatis.boot.model.User;
-import com.mybatis.boot.model.UserExample;
-import com.mybatis.boot.service.UserService;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageInfo;
+import com.mybatis.boot.mapper.UserMapper;
+import com.mybatis.boot.model.User;
+import com.mybatis.boot.model.UserExample;
+import com.mybatis.boot.service.ProductService;
+import com.mybatis.boot.service.UserService;
 
 /**
  * @Author LX
@@ -32,6 +36,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         this.userMapper = userMapper;
     }
 
+    @Autowired
+    ProductService productService;
 
     @Override
     @Cacheable
@@ -42,7 +48,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Override
     @CacheEvict(allEntries = true)
     public int addUser(User user) {
-
         return userMapper.insert(user);
     }
 
@@ -64,5 +69,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @CacheEvict(allEntries = true)
     public int del(Integer id) {
         return userMapper.deleteByPrimaryKey(id);
+    }
+
+
+    @Override
+    @Transactional
+    public void buyListProduct(int userId, List<Integer> productIdList) {
+        for (Integer id : productIdList) {
+            productService.buyProduct(userId, id, 1);
+        }
     }
 }

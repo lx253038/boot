@@ -11,6 +11,7 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="money" jdbcType="INTEGER" property="money"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -73,7 +74,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, name, age
+    id, name, age,money
   </sql>
     <select id="selectByExample" parameterType="com.mybatis.boot.model.UserExample" resultMap="BaseResultMap">
         select

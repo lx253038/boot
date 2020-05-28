@@ -36,7 +36,7 @@ public class RabbitController {
     @GetMapping("/send/{message}")
     public String sendMessage(@PathVariable String message) {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        rabbitTemplate.convertAndSend(ExchangeAndQueue.DIRECT_EXCHANGE, "directUser", new User(12, message, new Random().nextInt(100), new Date()), correlationId);
+        rabbitTemplate.convertAndSend(ExchangeAndQueue.DIRECT_EXCHANGE, "directUser", new User(12, message, new Random().nextInt(100), new Date(),100), correlationId);
         return "·¢ËÍ³É¹¦£¡";
     }
 

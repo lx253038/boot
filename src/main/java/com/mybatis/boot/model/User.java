@@ -34,8 +34,16 @@ public class User implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate = new Date();
 
+    private double money;
+
     public User(String name, Integer age) {
         this.name = name;
         this.age = age;
+    }
+
+    public User(String name, Integer age, double money) {
+        this.name = name;
+        this.age = age;
+        this.money = money;
     }
 }

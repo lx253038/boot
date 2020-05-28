@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("systemLog")
+@TableName("systemlog")
 public class SystemLog {
     @TableId(type = IdType.AUTO)
     private Integer id;
