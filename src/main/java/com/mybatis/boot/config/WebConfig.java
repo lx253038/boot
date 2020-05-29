@@ -1,5 +1,7 @@
 package com.mybatis.boot.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -7,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
-import java.util.List;
 
 /**
  * @Author LX
@@ -45,6 +45,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         interceptor.excludePathPatterns("/login");
         interceptor.excludePathPatterns("/loginCheck");
         interceptor.excludePathPatterns("/getCode");
+        interceptor.excludePathPatterns("/user/**");
 
         interceptor.addPathPatterns("/**");
     }
