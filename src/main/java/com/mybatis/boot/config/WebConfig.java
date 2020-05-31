@@ -46,6 +46,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
         interceptor.excludePathPatterns("/loginCheck");
         interceptor.excludePathPatterns("/getCode");
         interceptor.excludePathPatterns("/user/**");
+        interceptor.excludePathPatterns("/miaosha");
+        interceptor.excludePathPatterns("/miaosha2");
 
         interceptor.addPathPatterns("/**");
     }

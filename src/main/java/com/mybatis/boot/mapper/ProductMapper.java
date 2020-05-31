@@ -12,7 +12,7 @@ import com.mybatis.boot.model.Product;
  */
 public interface ProductMapper extends BaseMapper<Product> {
 
-    @Update("update product set count=count-#{count} where id=#{id}")
-    void updateCountById(int id, int count);
+    @Update("update product set count=count-#{count} where id=#{id} ")
+    boolean updateCountById(int id, int count);
 
 }

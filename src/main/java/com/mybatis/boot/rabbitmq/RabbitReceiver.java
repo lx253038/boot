@@ -1,12 +1,22 @@
 package com.mybatis.boot.rabbitmq;
 
-import com.alibaba.fastjson.JSON;
-import com.mybatis.boot.model.User;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mybatis.boot.model.Order;
+import com.mybatis.boot.model.Product;
+import com.mybatis.boot.model.User;
+import com.mybatis.boot.service.OrderService;
+import com.mybatis.boot.service.ProductService;
+import com.mybatis.boot.vo.ProductMessageVo;
 
 /**
  * @Author LX
@@ -15,6 +25,14 @@ import java.io.UnsupportedEncodingException;
  */
 @Component
 public class RabbitReceiver {
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     @RabbitListener(queues = "queue1")
@@ -33,8 +51,27 @@ public class RabbitReceiver {
 
 
     @RabbitListener(queues = "queue2")
-    public void getMsgStr2(String msg) {
-        System.out.println("队列2：" + msg);
+    public void getMsgStr2(ProductMessageVo messageVo) {
+        System.out.println(messageVo);
+        Product product = productService.getById(messageVo.getProductId());
+        if (product.getCount() <= 0) {
+            return;
+        }
+        //判断用户是否重复购买
+        List<Order> list = orderService.list(new LambdaQueryWrapper<Order>().eq(Order::getUserId, messageVo.getUserId()).eq(Order::getProductId, messageVo.getProductId()));
+        if (list.size() > 0) {
+            //将redis中库存加1
+            redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
+            return;
+        }
+        //秒杀购买商品
+        try {
+            productService.buyProduct(messageVo.getUserId(), messageVo.getProductId(), 1);
+        } catch (Exception e) {
+            redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
+            System.out.println(e.getMessage());
+        }
+        redisTemplate.opsForValue().set("buyProduct::" + messageVo.getUserId() + "-" + messageVo.getProductId(), true);
     }
 
     @RabbitListener(queues = {"queue3"})

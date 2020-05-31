@@ -123,6 +123,10 @@ public class ExchangeAndQueue {
      */
     @Bean
     public void bindAll() {
+
+        //直连交换机
+        amqpAdmin.declareBinding(new Binding(QUEUE_TWO,Binding.DestinationType.QUEUE,DIRECT_EXCHANGE,"createOrder",null));
+
         //扇形交换机绑定不需要路由键
         amqpAdmin.declareBinding(new Binding(QUEUE_TWO, Binding.DestinationType.QUEUE, FANOUT_EXCHANGE, "", null));  //扇形交换机和队列2绑定
         amqpAdmin.declareBinding(new Binding(QUEUE_THREE, Binding.DestinationType.QUEUE, FANOUT_EXCHANGE, "", null));  //扇形交换机和队列3绑定

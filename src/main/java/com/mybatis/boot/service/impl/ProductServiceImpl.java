@@ -1,16 +1,21 @@
 package com.mybatis.boot.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatis.boot.mapper.OrderMapper;
 import com.mybatis.boot.mapper.ProductMapper;
 import com.mybatis.boot.mapper.UserMapper;
+import com.mybatis.boot.model.Order;
 import com.mybatis.boot.model.Product;
 import com.mybatis.boot.model.User;
 import com.mybatis.boot.service.ProductService;
+import com.mybatis.boot.util.StringUtils;
 
 /**
  * @Author LX
@@ -25,6 +30,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    OrderMapper orderMapper;
 
     @Override
     //REQUIRED:如果当前有事务就加入到这个事务,没有就新建
@@ -43,13 +51,23 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         User user = userMapper.selectByPrimaryKey(userId);
         Product product = productMapper.selectById(productId);
         //减库存
-        productMapper.updateCountById(productId, count);
-        //更新用户余额
-        user.setMoney(user.getMoney() - product.getPrice() * count);
-        if (user.getMoney() < 0) {
-            throw new RuntimeException("余额不足");
+        if (productMapper.updateCountById(productId, count)) {
+            //更新用户余额
+            user.setMoney(user.getMoney() - product.getPrice() * count);
+            if (user.getMoney() < 0) {
+                throw new RuntimeException("余额不足");
+            }
+            userMapper.updateById(user);
+            //写入订单
+            Order order = new Order();
+            order.setOrderCode(StringUtils.getOrderStr());
+            order.setUserId(userId);
+            order.setProductId(productId);
+            order.setCreateDate(new Date());
+            orderMapper.insert(order);
+        }else{
+            System.out.println(111);
         }
-        userMapper.updateById(user);
     }
 
 

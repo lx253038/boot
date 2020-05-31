@@ -21,6 +21,14 @@ public class LayuiResult<T> {
         this.data = data;
     }
 
+    public static LayuiResult success(String msg) {
+        return new LayuiResult(0, msg, null);
+    }
+
+    public static LayuiResult error(String msg) {
+        return new LayuiResult(-1, msg, null);
+    }
+
     public Integer getCode() {
         return code;
     }
