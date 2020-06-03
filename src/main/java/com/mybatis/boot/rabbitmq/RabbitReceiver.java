@@ -52,7 +52,7 @@ public class RabbitReceiver {
 
     @RabbitListener(queues = "queue2")
     public void getMsgStr2(ProductMessageVo messageVo) {
-        System.out.println(messageVo);
+
         Product product = productService.getById(messageVo.getProductId());
         if (product.getCount() <= 0) {
             return;
@@ -67,11 +67,11 @@ public class RabbitReceiver {
         //ÃëÉ±¹ºÂòÉÌÆ·
         try {
             productService.buyProduct(messageVo.getUserId(), messageVo.getProductId(), 1);
+            redisTemplate.opsForValue().set("buyProduct::" + messageVo.getUserId() + "-" + messageVo.getProductId(), true);
         } catch (Exception e) {
             redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
             System.out.println(e.getMessage());
         }
-        redisTemplate.opsForValue().set("buyProduct::" + messageVo.getUserId() + "-" + messageVo.getProductId(), true);
     }
 
     @RabbitListener(queues = {"queue3"})

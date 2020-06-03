@@ -1,5 +1,6 @@
 package com.mybatis.boot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,6 +8,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -138,9 +140,14 @@ public class ShopController implements InitializingBean {
         if (userId == null) {
             userId = new Random().nextInt(100) + 1001;
         }
-        long count = redisTemplate.opsForValue().decrement("product::" + productId);
-        if (count < 0) {
-            redisTemplate.opsForValue().increment("product::" + productId);
+        //long count = redisTemplate.opsForValue().decrement("product::" + productId);
+        //执行redis lua脚本
+        String script = "if (redis.call('exists', KEYS[1]) and redis.call('get', KEYS[1]) > '0')  then redis.call('decr', KEYS[1])  return true else return false end";
+        DefaultRedisScript<Boolean> redisScript=new DefaultRedisScript<>(script);
+        redisScript.setResultType(Boolean.class);
+        List<String> listKey = new ArrayList();
+        listKey.add("product::" + productId);
+        if ( !(Boolean) redisTemplate.execute(redisScript,listKey)) {
             return LayuiResult.error("商品库存为空！");
         }
         //判断用户是否重复购买
