@@ -143,7 +143,16 @@ public interface UserMapper {
     </delete>
 </mapper>
  ```
-
+#### Redis相关知识点
+```
+    //执行redis lua脚本
+    String script = "if (redis.call('exists', KEYS[1]) and redis.call('get', KEYS[1]) > '0')  then redis.call('decr', KEYS[1])  return true else return false end";
+    DefaultRedisScript<Boolean> redisScript=new DefaultRedisScript<>(script);
+    redisScript.setResultType(Boolean.class); //设置返回类型
+    List<String> listKey = new ArrayList();
+    listKey.add("product::" + productId);  //key值
+    redisTemplate.execute(redisScript,listKey);
+```
 
 #### Cookie 和 Session
 - Cookie
