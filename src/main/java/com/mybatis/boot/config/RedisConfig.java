@@ -1,17 +1,20 @@
 package com.mybatis.boot.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -19,29 +22,32 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author LX
  * @Date 2019/12/4 16:16
- * @Description TODO
+ * @Description 配置redisTemplate和redisCacheManager
  */
 @Configuration
 @Slf4j
 public class RedisConfig extends CachingConfigurerSupport {
     /**
+     * 设置缓存管理器
      * 设置 redis 数据默认过期时间，默认6小时
      * 设置@cacheable 序列化方式
      */
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration() {
+    public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(6));
-        return configuration;
+        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
+        return new RedisCacheManager(redisCacheWriter, configuration);
     }
 
     @Bean(name = "redisTemplate")
@@ -84,7 +90,7 @@ public class RedisConfig extends CachingConfigurerSupport {
                 sb.append(".");
                 sb.append(obj.toString());
             }
-           log.info("调用Redis缓存:Key = " + sb.toString());
+            log.info("调用Redis缓存(SpringCache):Key = " + sb.toString());
             return sb.toString();
         };
     }

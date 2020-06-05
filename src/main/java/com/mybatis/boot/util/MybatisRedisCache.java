@@ -49,7 +49,7 @@ public class MybatisRedisCache implements Cache {
     public void putObject(Object key, Object value) {
         if (value != null) {
             key = formatKey(key.toString());
-            log.info("Redis缓存添加数据：key=" + key);
+            log.info("Redis缓存添加数据(MyBatis缓存)：key=" + key);
             try {
                 redisTemplate.opsForValue().set(key, value, 2, TimeUnit.DAYS);
             } catch (Exception e) {

@@ -24,7 +24,7 @@ import com.mybatis.boot.service.UserService;
  * @Description TODO
  */
 @Service
-@CacheConfig(cacheNames = "user")  //缓存当前区域，@CacheEvict(allEntries = true)清空当前区域的所有缓存
+@CacheConfig(cacheNames = "user",cacheManager = "redisCacheManager")  //缓存当前区域，@CacheEvict(allEntries = true)清空当前区域的所有缓存
 public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
 
     private final RedisTemplate redisTemplate;
