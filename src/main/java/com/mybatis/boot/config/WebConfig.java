@@ -5,10 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * @Author LX
@@ -16,7 +13,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @Description
  */
 @Configuration
-public class WebConfig extends WebMvcConfigurationSupport {
+//public class WebConfig extends WebMvcConfigurationSupport
+public class WebConfig implements WebMvcConfigurer
+{
     @Autowired
     UserArgumentResolver userArgumentResolver; //自定义用户参数解析器
 
@@ -29,7 +28,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
      * @param argumentResolvers
      */
     @Override
-    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(userArgumentResolver);
     }
 
@@ -38,7 +37,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
      * @param registry
      */
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration interceptor = registry.addInterceptor(loginHandler);
         interceptor.excludePathPatterns("/static/**");
         interceptor.excludePathPatterns("/error");
@@ -52,9 +51,23 @@ public class WebConfig extends WebMvcConfigurationSupport {
         interceptor.addPathPatterns("/**");
     }
     @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        super.addResourceHandlers(registry);
+    }
+
+    /**
+     * 添加跨域支持
+     *
+     * @param registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        CorsRegistration corsRegistration = registry.addMapping("/**");
+        corsRegistration.allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
 }

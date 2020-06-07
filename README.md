@@ -59,8 +59,33 @@ public class SysLogAspect {
         return result;
     }
 }
-
 ```
+#### CORS跨域支持
+- 在Controller中添加@CrossOrigin注解允许单个请求跨域
+- 继承WebMvcConfigurationSupport（实现WebMvcConfigurer接口）重写addCorsMappings方法
+```
+@Override
+public void addCorsMappings(CorsRegistry registry) {
+    CorsRegistration corsRegistration = registry.addMapping("/**");
+    corsRegistration.allowedOrigins("*")
+            .allowedMethods("*").allowedHeaders("*")
+            .allowCredentials(true).maxAge(3600);
+}
+ ```
+- 定义一个CorsFilter
+```
+@Bean
+public CorsFilter corsFilter() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOrigin("*");
+    corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.addAllowedMethod("*");
+    corsConfiguration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
+    return new CorsFilter(source);
+}
+ ```
 #### @Transactional 注解详解
 - value/transactionManager：当在配置文件中有多个 TransactionManager , 可以用该属性指定选择哪个事务管理器(默认)
 - propagation：事务的传播行为，默认REQUIRED
