@@ -1,15 +1,17 @@
 package com.mybatis.boot.service.impl;
 
-import com.mybatis.boot.model.User;
-import com.mybatis.boot.service.RedisService;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.TimeUnit;
+import com.mybatis.boot.model.User;
+import com.mybatis.boot.service.RedisService;
 
 /**
  * @Author LX
@@ -50,5 +52,15 @@ public class RedisServiceImpl implements RedisService {
         }
         redisTemplate.expire("token::" + token, 30, TimeUnit.MINUTES);
         return user;
+    }
+
+    @Override
+    public User getUserBySession(HttpServletRequest request) {
+        Object object = redisTemplate.opsForValue().get("session::" + request.getSession().getId());
+        if (object == null) {
+            return null;
+        }
+        redisTemplate.expire("session::" + request.getSession().getId(), 30, TimeUnit.MINUTES);
+        return (User) object;
     }
 }

@@ -1,9 +1,16 @@
 package com.mybatis.boot.controller;
 
-import com.mybatis.boot.model.User;
-import com.mybatis.boot.util.ResultUtil;
-import com.mybatis.boot.vo.LayuiResult;
-import com.wf.captcha.SpecCaptcha;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotEmpty;
+
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,15 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import com.mybatis.boot.model.User;
+import com.mybatis.boot.util.ResultUtil;
+import com.mybatis.boot.vo.LayuiResult;
+import com.wf.captcha.SpecCaptcha;
 
 /**
  * @Author LX
@@ -36,7 +38,10 @@ public class LoginController {
     RedisTemplate redisTemplate;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(User user) {
+        if(user!=null){
+            return "redirect:/";
+        }
         return "login";
     }
 
@@ -44,16 +49,17 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpServletResponse response, HttpServletRequest request) {
 
-        Cookie cookie = new Cookie("token", "");
-        cookie.setMaxAge(0);
-        cookie.setPath("/boot");
-        response.addCookie(cookie);
-        return "redirect:/login";
+//        Cookie cookie = new Cookie("token", "");
+//        cookie.setMaxAge(0);
+//        cookie.setPath("/boot");
+//        response.addCookie(cookie);
+        redisTemplate.delete("session::" + request.getSession().getId());
+        return "redirect:/";
     }
 
     @PostMapping("/loginCheck")
     @ResponseBody
-    public LayuiResult loginCheck(HttpServletResponse response, @Length(min = 3, max = 10, message = "用户名长度最少3位，最多10位！") String username, @NotEmpty String password, String vercode, String codeKey) {
+    public LayuiResult loginCheck(HttpServletRequest request, HttpServletResponse response, @Length(min = 3, max = 10, message = "用户名长度最少3位，最多10位！") String username, @NotEmpty String password, String vercode, String codeKey) {
 
         Object relText = redisTemplate.opsForValue().get(codeKey);
         if (relText == null) {
@@ -64,12 +70,16 @@ public class LoginController {
         }
         redisTemplate.delete(codeKey);
         User user = new User(username, new Random().nextInt(100));
-        String token = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set("token::" + token, user, 30, TimeUnit.MINUTES);
-        Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(3600 * 24 * 7);
-        cookie.setPath("/boot");
-        response.addCookie(cookie);
+        //手动设置cookie
+//        String token = UUID.randomUUID().toString();
+//        redisTemplate.opsForValue().set("token::" + token, user, 30, TimeUnit.MINUTES);
+//        Cookie cookie = new Cookie("token", token);
+//        cookie.setMaxAge(3600 * 24 * 7);
+//        cookie.setPath("/boot");
+//        response.addCookie(cookie);
+        //使用SpringSession实现
+        redisTemplate.opsForValue().set("session::" + request.getSession().getId(), user, 30, TimeUnit.MINUTES);
+
         return ResultUtil.success("登录成功！");
 
     }

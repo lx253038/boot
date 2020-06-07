@@ -12,4 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface RedisService {
 
     User getUserByToken(HttpServletRequest request);
+
+    User getUserBySession(HttpServletRequest request);
+
 }

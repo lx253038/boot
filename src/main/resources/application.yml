@@ -13,7 +13,7 @@ spring:
   jackson:
     time-zone: GMT+8
   datasource:
-    url: jdbc:mysql://localhost:3306/weixin?useSSL=false
+    url: jdbc:mysql://192.168.37.128:3306/weixin?useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -57,8 +57,16 @@ spring:
     port: 6379
     host: 127.0.0.1
     database: 0
+    jedis:
+      pool:
+        max-idle: 2000
+        min-idle: 1000
+        max-wait: -1s
+        max-active: -1
+  session:
+    store-type: redis
   rabbitmq:
-    host: 127.0.0.1
+    host: 192.168.37.128
     port: 5672
     password: guest
     username: guest
@@ -102,5 +110,5 @@ fdfs:
   thumb-image:
     width: 150
     height: 150
-  web-server-url: http://192.168.171.128:88/
+  web-server-url: http://192.168.37.128:88/
 

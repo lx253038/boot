@@ -1,13 +1,14 @@
 package com.mybatis.boot.config;
 
-import com.mybatis.boot.model.User;
-import com.mybatis.boot.service.RedisService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.mybatis.boot.model.User;
+import com.mybatis.boot.service.RedisService;
 
 /**
  * @Author LX
@@ -21,8 +22,10 @@ public class LoginHandler extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        User user = redisService.getUserByToken(request);
+        //手动设置cookie实现
+        // User user = redisService.getUserByToken(request);
+        //使用springSession 分布式session实现
+        User user = redisService.getUserBySession(request);
         if (user != null) {
             return true;
         }
