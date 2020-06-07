@@ -36,6 +36,7 @@ public class RedisServiceImpl implements RedisService {
                 for (Cookie cookie : cookies) {
                     if ("token".equals(cookie.getName())) {
                         token = cookie.getValue();
+                        break;
                     }
                 }
             }
