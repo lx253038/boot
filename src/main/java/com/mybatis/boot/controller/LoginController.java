@@ -54,7 +54,7 @@ public class LoginController {
 //        cookie.setPath("/boot");
 //        response.addCookie(cookie);
         redisTemplate.delete("session::" + request.getSession().getId());
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @PostMapping("/loginCheck")

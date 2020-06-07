@@ -58,14 +58,14 @@
 </div>
 <script type="text/javascript">
     layui.use(['form'], function () {
-        let form = layui.form; //表格
+        var form = layui.form; //表格
         form.on('submit(LAY-user-login-submit)', function (data) {
-            $.post("loginCheck", data.field, function (res) {
+            $.post("${path}/loginCheck", data.field, function (res) {
                 if (res.code == 500) {
                     layer.msg(res.msg)
                 } else {
                     layer.msg(res.msg)
-                    window.location.href="${path}/index"
+                    window.location.href="${path}${oldUrl?default('/')}";
                 }
             });
             return true;
@@ -74,7 +74,7 @@
     });
 
     function getCode() {
-        $.post("getCode", function (res) {
+        $.post("${path}/getCode", function (res) {
             $("#LAY-user-get-vercode").attr("src", res.image);
             $("#codeKey").val(res.codeKey);
         });

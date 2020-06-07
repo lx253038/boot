@@ -29,8 +29,11 @@ public class LoginHandler extends HandlerInterceptorAdapter {
         if (user != null) {
             return true;
         }
-        String url = request.getContextPath() + "/login";
-        response.sendRedirect(url);
+        //重定向方式到登录页无法获取到原URL
+//        String url = request.getContextPath() + "/login";
+//        response.sendRedirect(url);
+        request.setAttribute("oldUrl", request.getServletPath());
+        request.getRequestDispatcher("/login").forward(request, response);
         return false;
     }
 }

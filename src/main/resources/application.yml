@@ -104,7 +104,7 @@ pagehelper:
 
 fdfs:
   tracker-list:
-    - 192.168.171.128:22122
+    - 192.168.37.128:22122
   connect-timeout: 600
   so-timeout: 1500
   thumb-image:
