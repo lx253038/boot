@@ -138,7 +138,7 @@ public class ShopController implements InitializingBean {
     @ResponseBody
     public LayuiResult miaoSha2(@RequestParam(required = false) Integer userId, @RequestParam(required = true) int productId) {
         if (userId == null) {
-            userId = new Random().nextInt(100) + 1001;
+            userId = new Random().nextInt(2000) + 1001;
         }
         //long count = redisTemplate.opsForValue().decrement("product::" + productId);
         //Ö´ÐÐredis lua½Å±¾

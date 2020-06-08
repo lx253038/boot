@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mybatis.boot.model.Order;
 import com.mybatis.boot.model.Product;
 import com.mybatis.boot.model.User;
+import com.mybatis.boot.redisson.RedLockService;
 import com.mybatis.boot.service.OrderService;
 import com.mybatis.boot.service.ProductService;
 import com.mybatis.boot.vo.ProductMessageVo;
@@ -49,28 +50,43 @@ public class RabbitReceiver {
 
     }
 
+    @Autowired
+    private RedLockService redLockService;
 
+    /**
+     * 分布式环境中 多个程序监听一个队列处理订单存在线程安全问题
+     * 使用分布式锁解决线程安全问题
+     */
     @RabbitListener(queues = "queue2")
     public void getMsgStr2(ProductMessageVo messageVo) {
-
-        Product product = productService.getById(messageVo.getProductId());
-        if (product.getCount() <= 0) {
-            return;
-        }
-        //判断用户是否重复购买
-        List<Order> list = orderService.list(new LambdaQueryWrapper<Order>().eq(Order::getUserId, messageVo.getUserId()).eq(Order::getProductId, messageVo.getProductId()));
-        if (list.size() > 0) {
-            //将redis中库存加1
-            redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
-            return;
-        }
-        //秒杀购买商品
+        //redis实现分布式锁保证线程安全
+        redLockService.lock("createOrder");
         try {
-            productService.buyProduct(messageVo.getUserId(), messageVo.getProductId(), 1);
-            redisTemplate.opsForValue().set("buyProduct::" + messageVo.getUserId() + "-" + messageVo.getProductId(), true);
+
+            Product product = productService.getById(messageVo.getProductId());
+            if (product.getCount() <= 0) {
+                return;
+            }
+            //判断用户是否重复购买
+            List<Order> list = orderService.list(new LambdaQueryWrapper<Order>().eq(Order::getUserId, messageVo.getUserId()).eq(Order::getProductId, messageVo.getProductId()));
+            if (list.size() > 0) {
+                //将redis中库存加1
+                redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
+                return;
+            }
+            //秒杀购买商品
+            try {
+                productService.buyProduct(messageVo.getUserId(), messageVo.getProductId(), 1);
+                redisTemplate.opsForValue().set("buyProduct::" + messageVo.getUserId() + "-" + messageVo.getProductId(), true);
+            } catch (Exception e) {
+                redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
+                System.out.println(e.getMessage());
+            }
+
         } catch (Exception e) {
-            redisTemplate.opsForValue().increment("product::" + messageVo.getProductId());
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            redLockService.unLock("createOrder");
         }
     }
 
